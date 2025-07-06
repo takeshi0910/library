@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.takeshi.library.mapper.BookMapper">
+
+    <!-- 書籍一覧 -->
+    <select id="findAll" resultType="Book">
+        SELECT * FROM book
+        WHERE deleted = false
+        ORDER BY id
+    </select>
+
+    <!-- 登録処理 -->
+    <insert id="insert" parameterType="Book">
+        INSERT INTO book (title, author, genre, isbn)
+        VALUES (#{title}, #{author}, #{genre}, #{isbn})
+    </insert>
+
+    <!-- 削除処理 -->
+    <update id="softDelete">
+        UPDATE book SET deleted = true WHERE id = #{id}
+    </update>
+
+
+</mapper>
