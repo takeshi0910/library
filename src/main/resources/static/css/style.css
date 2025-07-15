@@ -1,0 +1,156 @@
+.container input,
+.container select,
+.container textarea {
+  background-color: #f7ede3; /* アイボリー調 */
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  color: #3a2323;
+  transition: box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+/* ヘッダー　フッター */
+.bg-ivory-deep {
+  background-color: #fcf6ea;
+}
+
+body {
+  background-color: #fefcf8;
+  color: #8e694d;
+  font-family: 'Zen Maru Gothic', sans-serif;
+}
+
+ /* footerを画面最下部に */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.wrapper {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+header {
+  background-color: #f0e6cc;              /* やさしいアイボリー */
+  box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.05); /* 押し込み風の影 */
+  border-bottom: 1px solid #d6cbb2;
+}
+
+/* 共通 nav-link スタイル */
+.nav-link {
+  position: relative;
+  color: #ddc39b;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+  transform: translateY(-2px);
+  opacity: 0.85;
+}
+
+/* active時の押し込みエフェクト */
+.nav-link.active {
+  background-color: #fffdf9; /* アイボリー系：ベージュ寄り */
+  color: #8e694d;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  transform: translateY(2px);
+}
+
+/* ボタン */
+.btn-ivory {
+  background-color: #e7dec1;        /* 濃いめのアイボリー（ほんのりベージュ寄り） */
+  color: #3a2323;                   /* 視認性を意識した濃い文字色 */
+  border: 1px solid #c2bba4;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);  /* さりげない立体感 */
+  transition: background-color 0.2s ease;
+}
+
+.btn-ivory:hover {
+  background-color: #d8ceb3;        /* ホバー時は少し深みを出す */
+  color: #2c2c2c;
+}
+
+.btn-ivory.btn-sm {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+}
+
+.btn:focus {
+  border: 1px solid #c2bba4;
+  outline-offset: 2px;
+}
+
+/* フォーカス時の柔らかい色変化 */
+input.form-control:focus {
+  outline: none;
+  border: 2px solid #e6dfc6;
+  box-shadow: 0 0 5px #f2ecda;
+}
+/* inputタグの青色⇒ホワイトに上書き */
+input:-webkit-autofill {
+  background-color: #fcf9f2;
+  box-shadow: 0 0 0px 1000px white inset !important;
+  -webkit-text-fill-color: #333 !important;
+}
+
+/* 本の検索結果表示テーブル */
+.table {
+  background-color: #fff;
+  max-width: 1020px;
+}
+
+.table th {
+  background-color: #e5e0d0;
+}
+
+.table th,
+.table td{
+  color : #3a2323;
+}
+
+.my-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.my-table tbody tr {
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.my-table tbody tr:hover {
+  background-color: #f2f0ef;
+    transform: scale(1.01);
+    color: inherit;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+
+}
+
+.my-table tr[data-href] {
+  cursor: pointer;
+}
+
+/* 検索結果の表示アニメーション */
+.fade-in {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: fadeInMove 0.4s ease forwards;
+}
+
+@keyframes fadeInMove {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

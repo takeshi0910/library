@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">図書館アプリ</title>
+    <!-- 優先順を調整した書き方（Bootstrapを優先する場合） -->
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.min.css}">
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div class="wrapper d-flex min-vh-100">
+
+    <header class="bg-ivory-deep border-bottom shadow-sm">
+        <div class="container py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h1 class="h4 mb-0 app-title">
+                    <i class="fas fa-book me-2"></i> Library App - 図書館アプリ
+                </h1>
+                <nav class="d-flex gap-3">
+                    <a th:href="@{/}" th:class="'nav-link ' + (${requestUri == '/' ? 'active' : ''})">
+                        <i class="fas fa-house-chimney"></i> HOME - ホーム
+                    </a>
+                    <a th:href="@{/books}" th:class="'nav-link ' + (${requestUri == '/books' ? 'active' : ''})">
+                        <i class="fas fa-book"></i> LIST - 一覧
+                    </a>
+                    <a th:href="@{/books/new}" th:class="'nav-link ' + (${requestUri == '/books/new' ? 'active' : ''})">
+                        <i class="fas fa-pen-to-square"></i> ADD - 登録
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- メインコンテンツ -->
+    <div class="flex-grow-1 d-flex flex-column">
+        <main class="bg-ivory px-4 py-3 flex-grow-1">
+            <section layout:fragment="content"></section>
+        </main>
+        <footer class="bg-ivory-deep text-center py-3">
+            <p class="mb-0">&copy; 2025 <strong>Takepii Library</strong></p>
+        </footer>
+    </div>
+
+</div>
+>
+</body>
+</html>

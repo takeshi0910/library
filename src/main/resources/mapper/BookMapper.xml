@@ -3,18 +3,33 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.takeshi.library.mapper.BookMapper">
+    <resultMap id="BookResultMap" type="Book">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="author" column="author"/>
+        <result property="isbn" column="isbn"/>
+        <result property="deleted" column="deleted"/>
+        <result property="genreId" column="genre_id"/>
+        <result property="genreName" column="genre_name"/>
+    </resultMap>
 
-    <!-- 書籍一覧 -->
-    <select id="findAll" resultType="Book">
-        SELECT * FROM book
-        WHERE deleted = false
-        ORDER BY id
+    <select id="searchBooks" resultMap="BookResultMap" parameterType="String">
+        SELECT b.id, b.title, b.author, b.genre_id, b.isbn, b.deleted,
+        g.id AS genre_id, g.name AS genre_name
+        FROM book b
+        JOIN genres g ON b.genre_id = g.id
+        WHERE b.deleted = false
+        <if test="keyword != null and keyword.trim() != ''">
+            AND (b.title LIKE CONCAT('%', #{keyword}, '%')
+            OR b.author LIKE CONCAT('%', #{keyword}, '%'))
+        </if>
+        ORDER BY b.id
     </select>
 
     <!-- 登録処理 -->
     <insert id="insert" parameterType="Book">
-        INSERT INTO book (title, author, genre, isbn)
-        VALUES (#{title}, #{author}, #{genre}, #{isbn})
+        INSERT INTO book (title, author, genre_id, isbn, deleted)
+        VALUES (#{title}, #{author}, #{genreId}, #{isbn}, FALSE)
     </insert>
 
     <!-- 削除処理 -->

@@ -1,11 +1,20 @@
 package com.takeshi.library.controller.book;
 
 
+import com.takeshi.library.form.SearchBookForm;
+import com.takeshi.library.mapper.BookMapper;
+import com.takeshi.library.mapper.GenreMapper;
 import com.takeshi.library.model.entity.Book;
+import com.takeshi.library.model.entity.Genre;
+import com.takeshi.library.service.BookService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -13,44 +22,40 @@ import java.util.List;
 @RequestMapping("/books")
 public class BookController {
 
-   /* private final BookRepository bookRepository;
+    private final BookService bookService;
+    private final GenreMapper genreMapper;
 
-    public BookController(BookRepository bookRepository) {
-        this.bookRepository = bookRepository;
+    @Autowired
+    public BookController(BookService bookService, GenreMapper genreMapper) {
+        this.bookService = bookService ;
+        this.genreMapper = genreMapper;
     }
 
-    // 📘 一覧表示
     @GetMapping
-    public String listBooks(Model model) {
-        model.addAttribute("books", bookRepository.findAll());
-        return "books/list"; // ← books/list.html を表示（まだ作成してない場合は後ほど）
-    }*/
+    public String list(Model model) {
+        List<Book> books = bookService.searchBooks(""); // 空文字で検索 → 全件表示
+        model.addAttribute("searchBookForm", new SearchBookForm());
+        model.addAttribute("books", books);
+        return "books/list";
+    }
 
     // 🆕 新規登録フォーム表示
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("book", new Book());
-        model.addAttribute("genres", List.of("小説", "ビジネス", "歴史", "その他"));
-        return "books/new"; // ← 拡張子 .html は書かない！
+        List<Genre> genres = genreMapper.findAllActive();
+        model.addAttribute("genres", genres);
+        return "books/new";
     }
 
-
-    // 📥 登録処理（POST）
-    /*@PostMapping
-    public String createBook(@ModelAttribute @Valid Book book,
-                             BindingResult result,
-                             Model model) {
+    @PostMapping("/new")
+    public String create(@ModelAttribute @Validated Book book, BindingResult result, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("genres", List.of("小説", "ビジネス", "歴史", "その他"));
-            return "books/new";
+            model.addAttribute("genres", genreMapper.findAllActive()); // 再表示のためジャンル一覧セット
+            return "books/new"; // エラー時はフォームに戻る
         }
-        bookRepository.save(book);
-        return "redirect:/books";
-    }*/
-
-    // 追加予定の構想（必要に応じて）
-    // - 編集フォーム（GET /books/{id}/edit）
-    // - 編集処理（POST /books/{id}）
-    // - 削除処理（POST /books/{id}/delete）
+        bookService.insert(book);
+        return "redirect:/books"; // 一覧画面へリダイレクト
+    }
 
 }

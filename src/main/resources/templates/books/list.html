@@ -1,37 +1,83 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ja"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
 <head>
-    <meta charset="UTF-8">
-    <title>図書一覧 | 図書館アプリ</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>書籍一覧</title>
 </head>
-<body class="bg-light">
-<div class="container mt-4">
 
-    <h1 class="mb-4">📚 図書一覧</h1>
+<body>
+<section layout:fragment="content">
+    <div class="container">
 
-    <a th:href="@{/books/new}" class="btn btn-primary mb-3">➕ 新規登録</a>
+        <form class="mb-3" th:object="${searchBookForm}">
+            <div class="row g-2 align-items-center justify-content-start">
+                <div class="col-auto">
+                    <input type="text" th:field="*{keyword}" class="form-control form-control-sm"
+                           placeholder="Search in library" style="width: 200px;"/>
+                </div>
+                <div class="col-auto">
+                    <button type="button" onclick="searchBooks()" class="btn btn-ivory btn-sm">
+                        <i class="fas fa-search me-1"></i> Search - 検索
+                    </button>
+                </div>
+            </div>
+        </form>
 
-    <table class="table table-bordered table-hover bg-white">
-        <thead class="table-light">
+        <table class="table my-table">
+            <thead class="table-light">
             <tr>
-                <th>#</th>
-                <th>書名</th>
-                <th>著者</th>
-                <th>ジャンル</th>
-                <th>ISBN</th>
+                <th><i class="fas fa-book-open"></i> TITLE - 書名</th>
+                <th><i class="fas fa-user"></i> AUTER - 著者</th>
+                <th><i class="fas fa-tags"></i> GENRE - ジャンル</th>
+                <th><i class="fas fa-barcode"></i> ISBN</th>
             </tr>
-        </thead>
-        <tbody>
-            <tr th:each="book, stat : ${books}">
-                <td th:text="${stat.index + 1}">1</td>
-                <td th:text="${book.title}">タイトル</td>
-                <td th:text="${book.author}">著者</td>
-                <td th:text="${book.genre}">ジャンル</td>
-                <td th:text="${book.isbn}">ISBN</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody id="result">
+            <!-- JavaScriptで動的にここを更新！ -->
+            </tbody>
+
+        </table>
+    </div>
+
+    <script>
+        window.onload = function() {
+          searchBooks(); // ページ読み込み時に自動実行！
+        };
+
+        function searchBooks() {
+          const keyword = document.getElementById('keyword').value;
+
+          axios.get(`/api/books/search`, {
+            params: { keyword: keyword }
+          })
+          .then(response => {
+            const data = response.data;
+            const result = document.getElementById('result');
+
+            result.innerHTML = data.map(book => `
+              <tr class="fade-in" data-id="${book.id}" style="cursor: pointer;">
+                <td>${book.title}</td>
+                <td>${book.author}</td>
+                <td>${book.genreName}</td>
+                <td>${book.isbn}</td>
+              </tr>
+            `).join('');
+
+            // 行クリックで編集画面に飛ぶ処理もここに追加OK！
+            document.querySelectorAll('#result tr[data-id]').forEach(row => {
+              row.addEventListener('click', () => {
+                window.location.href = `/edit/${row.dataset.id}`;
+              });
+            });
+          })
+          .catch(error => {
+            console.error('検索に失敗しました:', error);
+          });
+        }
+    </script>
+
+</section>
 </body>
 </html>

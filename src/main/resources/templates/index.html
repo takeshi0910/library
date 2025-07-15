@@ -1,11 +1,15 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
 <head>
-    <meta charset="UTF-8">
-    <title>図書館アプリへようこそ</title>
+    <title>HOME</title>
 </head>
 <body>
-<h1>こんにちは、たけしさん！📚</h1>
-<p>ここから図書館アプリが始まります。</p>
+<section layout:fragment="content">
+    <h1>こんにちは、たけしさん！📚</h1>
+    <p>ここから図書館アプリが始まります。</p>
+</section>
 </body>
 </html>
