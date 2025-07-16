@@ -26,6 +26,14 @@
         ORDER BY b.id
     </select>
 
+    <select id="findById" resultMap="BookResultMap" parameterType="Long">
+        SELECT b.id, b.title, b.author, b.genre_id, b.isbn, b.deleted,
+        g.id AS genre_id, g.name AS genre_name
+        FROM book b
+        JOIN genres g ON b.genre_id = g.id
+        WHERE b.id = #{id}
+    </select>
+
     <!-- 登録処理 -->
     <insert id="insert" parameterType="Book">
         INSERT INTO book (title, author, genre_id, isbn, deleted)

@@ -4,14 +4,14 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
 <head>
-    <title>📘 本の新規登録</title>
+    <title>📘 本の新規登録</title><title th:text="${isEdit} ? '編集' : '新規登録'"></title>
 </head>
-
+    <h2 th:text="${isEdit} ? '📖 編集フォーム' : '📚 新規登録フォーム'"></h2>
 <body>
 <section layout:fragment="content">
     <div class="container">
 
-        <form th:action="@{/books/new}" th:object="${book}" method="post" class="bg-white p-4 rounded shadow-sm"
+        <form  th:action="${isEdit} ? @{/books/update} : @{/books/create}" th:object="${book}" method="post" class="bg-white p-4 rounded shadow-sm"
               novalidate>
             <div th:if="${#fields.hasGlobalErrors()}">
                 <div class="alert alert-danger" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
@@ -54,7 +54,8 @@
 
             <div class="d-flex justify-content-between">
                 <a th:href="@{/books}" class="btn btn-secondary">⬅ 戻る</a>
-                <button type="submit" class="btn btn-primary">📥 登録する</button>
+                <button type="submit" class="btn btn-primary" th:text="${isEdit} ? '📤 更新する' : '📥 登録する'"></button>
+
             </div>
         </form>
     </div>

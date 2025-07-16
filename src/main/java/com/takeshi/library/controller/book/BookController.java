@@ -39,13 +39,16 @@ public class BookController {
         return "books/list";
     }
 
-    // 🆕 新規登録フォーム表示
-    @GetMapping("/new")
-    public String showCreateForm(Model model) {
-        model.addAttribute("book", new Book());
+    @GetMapping("/form")
+    public String showForm(@RequestParam(required = false) Long id, Model model) {
+        Book book = (id != null) ? bookService.findById(id) : new Book();
+        model.addAttribute("book", book);
+        model.addAttribute("isEdit", id != null);
+
         List<Genre> genres = genreMapper.findAllActive();
         model.addAttribute("genres", genres);
-        return "books/new";
+
+        return "books/form"; // HTMLファイルは form.html に統一
     }
 
     @PostMapping("/new")

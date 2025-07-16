@@ -26,4 +26,14 @@ public class BookServiceImpl implements BookService {
     public void insert(Book book){
         bookMapper.insert(book);
     }
+
+    @Override
+    public Book findById(Long id) {
+        return bookMapper.findById(id);
+    }
+
+    @Override
+    public void update(Book book) {
+
+    }
 }

@@ -27,7 +27,7 @@
                     <a th:href="@{/books}" th:class="'nav-link ' + (${requestUri == '/books' ? 'active' : ''})">
                         <i class="fas fa-book"></i> LIST - 一覧
                     </a>
-                    <a th:href="@{/books/new}" th:class="'nav-link ' + (${requestUri == '/books/new' ? 'active' : ''})">
+                    <a th:href="@{/books/form}" th:class="'nav-link ' + (${requestUri == '/books/new' ? 'active' : ''})">
                         <i class="fas fa-pen-to-square"></i> ADD - 登録
                     </a>
                 </nav>
@@ -35,7 +35,7 @@
         </div>
     </header>
 
-    <!-- メインコンテンツ -->
+    <!-- メインコンテンツ と フッター -->
     <div class="flex-grow-1 d-flex flex-column">
         <main class="bg-ivory px-4 py-3 flex-grow-1">
             <section layout:fragment="content"></section>
