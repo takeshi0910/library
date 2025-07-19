@@ -27,7 +27,7 @@ public class BookController {
 
     @Autowired
     public BookController(BookService bookService, GenreMapper genreMapper) {
-        this.bookService = bookService ;
+        this.bookService = bookService;
         this.genreMapper = genreMapper;
     }
 
@@ -51,14 +51,40 @@ public class BookController {
         return "books/form"; // HTMLファイルは form.html に統一
     }
 
-    @PostMapping("/new")
-    public String create(@ModelAttribute @Validated Book book, BindingResult result, Model model) {
+    @PostMapping("/create")
+    public String create(@ModelAttribute @Validated Book book, BindingResult result, RedirectAttributes redirectAttributes, Model model) {
         if (result.hasErrors()) {
             model.addAttribute("genres", genreMapper.findAllActive()); // 再表示のためジャンル一覧セット
-            return "books/new"; // エラー時はフォームに戻る
+            return "books/form"; // エラー時はフォームに戻る
         }
         bookService.insert(book);
+        redirectAttributes.addFlashAttribute("message",
+                "『" + book.getTitle() + "』を登録しました。");
         return "redirect:/books"; // 一覧画面へリダイレクト
+    }
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute @Validated Book book, BindingResult result, RedirectAttributes redirectAttributes, Model model) {
+        if (result.hasErrors()) {
+            model.addAttribute("genres", genreMapper.findAllActive());
+            return "books/form";
+        }
+        bookService.update(book);
+        redirectAttributes.addFlashAttribute("message",
+                "『" + book.getTitle() + "』を更新しました。");
+        return "redirect:/books";
+    }
+
+    @PostMapping("/delete/{id}")
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        // 削除前にタイトルを取得してメッセージ用に使う（任意）
+        Book book =bookService.findById(id);
+        String title = (book != null) ? book.getTitle() : "未確認の書籍";
+
+        bookService.softDelete(id); // 実際の削除処理
+        redirectAttributes.addFlashAttribute("message", "『" + title + "』を削除しました。");
+
+        return "redirect:/books"; // 一覧に戻る
     }
 
 }

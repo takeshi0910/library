@@ -9,5 +9,7 @@ import java.util.List;
 public interface BookMapper {
     List<Book> searchBooks(String keyword);
     void insert(Book book);
+    void update(Book book);
     Book findById(Long id); // これを追加！
+    void softDelete(Long id);
 }

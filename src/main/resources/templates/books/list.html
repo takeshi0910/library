@@ -10,7 +10,9 @@
 <body>
 <section layout:fragment="content">
     <div class="container">
-
+        <div th:if="${message}" class="alert alert-success">
+            <span th:text="${message}"></span>
+        </div>
         <form class="mb-3" th:object="${searchBookForm}">
             <div class="row g-2 align-items-center justify-content-start">
                 <div class="col-auto">
@@ -58,21 +60,16 @@
 
             result.innerHTML = data.map(book => `
               <tr class="fade-in" data-id="${book.id}" style="cursor: pointer;">
-                <td>${book.title}</td>
                 <td>${book.author}</td>
-                <td>${book.genreName}</td>
+                <td>${book.title}</td>
                 <td>${book.isbn}</td>
+                <td>${book.genreName}</td>
               </tr>
             `).join('');
 
-            // 行クリックで編集画面に飛ぶ処理もここに追加OK！
             document.querySelectorAll('#result tr[data-id]').forEach(row => {
               row.addEventListener('click', () => {
-                row.classList.add('bounce-pop');
-
-                setTimeout(() => {
-                  window.location.href = `/books/form?id=${row.dataset.id}`;
-                }, 400); // アニメーション終了後に遷移
+                window.location.href = `/books/form?id=${row.dataset.id}`;
               });
             });
           })

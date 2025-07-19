@@ -9,4 +9,5 @@ public interface BookService {
     void insert(Book book);
     Book findById(Long id); // ← 編集用の取得メソッドを追加！
     void update(Book book); // ← 更新用のメソッドも追加できる！
+    void softDelete(Long id);
 }

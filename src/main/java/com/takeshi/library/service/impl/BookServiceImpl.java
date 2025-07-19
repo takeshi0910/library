@@ -34,6 +34,11 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void update(Book book) {
+        bookMapper.update(book);
+    }
 
+    @Override
+    public void softDelete(Long id) {
+        bookMapper.softDelete(id);
     }
 }

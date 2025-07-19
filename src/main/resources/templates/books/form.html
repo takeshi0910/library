@@ -16,8 +16,9 @@
             <div th:if="${#fields.hasGlobalErrors()}">
                 <div class="alert alert-danger" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
             </div>
+            <input type="hidden" th:if="${isEdit}" th:field="*{id}" />
             <div class="mb-3">
-                <label class="form-label">書名</label>
+                <label class="form-label">書名 <span class="text-danger">*</span></label>
                 <input type="text" th:field="*{title}"
                        th:classappend="${#fields.hasErrors('title')}? 'is-invalid'"
                        class="form-control">
@@ -25,7 +26,7 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label">著者</label>
+                <label class="form-label">著者 <span class="text-danger">*</span></label>
                 <input type="text" th:field="*{author}"
                        th:classappend="${#fields.hasErrors('author')}? 'is-invalid'"
                        class="form-control">
@@ -33,7 +34,7 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label">ジャンル</label>
+                <label class="form-label">ジャンル <span class="text-danger">*</span></label>
                 <select th:field="*{genreId}"
                         th:classappend="${#fields.hasErrors('genreId')}? 'is-invalid'"
                         class="form-select">
@@ -52,10 +53,24 @@
                 <div class="text-danger" th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}"></div>
             </div>
 
-            <div class="d-flex justify-content-between">
-                <a th:href="@{/books}" class="btn btn-secondary">⬅ 戻る</a>
-                <button type="submit" class="btn btn-primary" th:text="${isEdit} ? '📤 更新する' : '📥 登録する'"></button>
+            <div class="mt-5 d-flex justify-content-between align-items-center">
+                <!-- 登録 / 更新ボタン -->
+                <button type="submit"
+                        class="btn btn-ivory btn-sm"
+                        th:formaction="@{${isEdit} ? '/books/update' : '/books/create'}">
+                    <i class="fas fa-pen-to-square"></i>
+                    <span th:text="${isEdit} ? 'UPDATE - 更新' : 'ADD - 登録'"></span>
+                </button>
 
+                <!-- 削除ボタン（右端） -->
+                <button type="submit"
+                        th:if="${isEdit}"
+                        th:formaction="@{'/books/delete/' + ${book.id}}"
+                        onclick="return confirm('本当に削除しますか？');"
+                        class="btn btn-danger btn-sm ms-auto">
+                    <i class="fas fa-trash-alt"></i>
+                    <span>DELETE - 削除</span>
+                </button>
             </div>
         </form>
     </div>

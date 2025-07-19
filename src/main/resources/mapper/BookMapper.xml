@@ -40,7 +40,17 @@
         VALUES (#{title}, #{author}, #{genreId}, #{isbn}, FALSE)
     </insert>
 
-    <!-- 削除処理 -->
+    <update id="update" parameterType="com.takeshi.library.model.entity.Book">
+        UPDATE book
+        SET title = #{title},
+        author = #{author},
+        genre_id = #{genreId},
+        isbn = #{isbn},
+        deleted = #{deleted}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 論理削除処理 -->
     <update id="softDelete">
         UPDATE book SET deleted = true WHERE id = #{id}
     </update>
