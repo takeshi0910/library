@@ -6,5 +6,5 @@ import lombok.Data;
 public class Genre {
     private Integer id;
     private String name;
-    private Boolean deleted; // 論理削除用
+    private Boolean deleted = false; // 初期値を明示
 }

@@ -9,19 +9,18 @@ public class Book {
 
     private Long id;
 
-    @NotBlank
+    @NotBlank(message = "書名は必須項目です")
     private String title;
 
-    @NotBlank
+    @NotBlank(message = "著者は必須項目です")
     private String author;
 
-    @NotNull(message = "ジャンルを選択してください")
+    @NotNull(message = "ジャンルを選択してね")
     private Integer genreId;
 
     private String genreName;
 
     private String isbn;
 
-    private boolean deleted;
-
+    private boolean deleted = false; // 初期値を明示
 }

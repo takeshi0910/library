@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>ユーザー一覧</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <h2>ユーザー一覧</h2>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>ユーザー名</th>
+            <th>メールアドレス</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.id}"></td>
+            <td th:text="${user.username}"></td>
+            <td th:text="${user.mail}"></td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+</body>
+</html>

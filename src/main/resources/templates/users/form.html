@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${id != null} ? 'ユーザー編集 ' : 'ユーザー新規登録 - Sign Up'">ユーザー新規登録 - Sign Up</title>
+</head>
+<body>
+<h2 th:text="${id != null} ? 'ユーザー編集 ' : 'ユーザー新規登録 - Sign Up'">ユーザー新規登録 - Sign Up</h2>
+
+<section layout:fragment="content">
+    <div class="container">
+
+        <form th:action="@{/users/save}" th:object="${user}" method="post" class="bg-white p-4 rounded shadow-sm" novalidate>
+            <!-- グローバルエラー表示 -->
+            <div th:if="${#fields.hasGlobalErrors()}">
+                <div class="alert alert-danger" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
+            </div>
+
+            <!-- ID（編集時のみ） -->
+            <input type="hidden" th:if="${isEdit}" th:field="*{id}"/>
+
+            <!-- 名前 -->
+            <div class="mb-3">
+                <label class="form-label">名前 <span class="text-danger">*</span></label>
+                <input type="text" th:field="*{name}" class="form-control"
+                       th:classappend="${#fields.hasErrors('name')}? 'is-invalid'">
+                <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            </div>
+
+            <!-- メールアドレス -->
+            <div class="mb-3">
+                <label class="form-label">メールアドレス <span class="text-danger">*</span></label>
+                <input type="email" th:field="*{mail}" class="form-control"
+                       th:classappend="${#fields.hasErrors('mail')}? 'is-invalid'">
+                <div class="text-danger" th:if="${#fields.hasErrors('mail')}" th:errors="*{mail}"></div>
+            </div>
+
+            <!-- パスワード -->
+            <div class="mb-3">
+                <label class="form-label">パスワード <span class="text-danger">*</span></label>
+                <input type="password" th:field="*{password}" class="form-control"
+                       th:classappend="${#fields.hasErrors('password')}? 'is-invalid'">
+                <div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+            </div>
+
+            <!-- ロール（選択式 or hidden） -->
+            <div class="mb-3" th:if="${isAdmin}">
+                <label class="form-label">ロール</label>
+                <select th:field="*{role}" class="form-select">
+                    <option value="USER">USER</option>
+                    <option value="ADMIN">ADMIN</option>
+                </select>
+            </div>
+            <input type="hidden" th:if="${!isAdmin}" th:field="*{role}" value="USER"/>
+
+            <!-- 削除フラグ（hidden） -->
+            <input type="hidden" th:field="*{deleted}" value="false"/>
+
+            <!-- ボタン群 -->
+            <div class="mt-5 d-flex justify-content-between align-items-center">
+                <button type="submit" class="btn btn-ivory btn-sm">
+                    <i class="fas fa-check-circle"></i>
+                    <span>SAVE - 保存</span>
+                </button>
+
+                <button type="submit"
+                        th:if="${isEdit}"
+                        th:formaction="@{'/users/delete/' + ${user.id}}"
+                        onclick="return confirm('本当に削除しますか？');"
+                        class="btn btn-danger btn-sm ms-auto">
+                    <i class="fas fa-trash-alt"></i>
+                    <span>DELETE - 削除</span>
+                </button>
+            </div>
+        </form>
+
+    </div>
+</section>
+</body>
+</html>
+</html>
