@@ -38,7 +38,9 @@ dependencies {
 	implementation 'org.webjars:jquery:3.6.0'
 	implementation 'org.webjars:font-awesome:6.5.1'
 	implementation 'org.webjars:webjars-locator:0.45'
-
+	implementation 'org.webjars.npm:axios:1.6.7'
+	implementation 'org.webjars.npm:vue:3.4.21'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

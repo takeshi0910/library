@@ -7,6 +7,6 @@ import java.util.List;
 
 @Mapper
 public interface GenreMapper {
-    List<Genre> findAllActive(); // deleted = false だけ取得
+    List<Genre> findAll(); // deleted = false だけ取得
 }
 

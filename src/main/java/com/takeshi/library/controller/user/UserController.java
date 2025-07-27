@@ -2,6 +2,7 @@ package com.takeshi.library.controller.user;
 
 import com.takeshi.library.form.UserForm;
 import com.takeshi.library.model.entity.User;
+import com.takeshi.library.model.entity.enums.Role;
 import com.takeshi.library.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,21 @@ public class UserController {
         this.userService = userService;
     }
 
+    @ModelAttribute("isAdmin")
+    public boolean populateIsAdmin(Principal principal) {
+    // TODO 権限判定 今は true 固定　
+    /* if (principal == null) return false; // 未ログイン時の安全対策
+       User currentUser = userService.findByMail(principal.getName()); // ログイン時に使った「username」フィールドの値を返すメソッド
+       return currentUser.getRole().equals("ADMIN");
+    */
+        return true;
+    }
+
+    @ModelAttribute("roles")
+    public Role[] populateRoles() {
+        return Role.values();
+    }
+
     // 一覧表示
     @GetMapping
     public String list(Model model) {
@@ -36,35 +52,37 @@ public class UserController {
 
     // 登録画面表示
     @GetMapping("/form")
-    public String showForm(@RequestParam(required = false) Long id, Model model, Principal principal) {
-        /* TODO 権限判定 今は true 固定
-        User currentUser = userService.findByMail(principal.getName()); // ログイン時に使った「username」フィールドの値を返すメソッド
-        boolean isAdmin = currentUser.getRole().equals("ADMIN");
-        model.addAttribute("isAdmin", isAdmin);*/
-        model.addAttribute("isAdmin", true);
+    public String showForm(@RequestParam(required = false) Long id, Model model) {
+
 
         User user = (id != null) ? userService.findById(id) : new User();
-        model.addAttribute("user", user);
+        UserForm userForm = new UserForm();
+        userForm.setName(user.getName());
+        userForm.setEmail(user.getEmail());
+
+        model.addAttribute("userForm", userForm);
         model.addAttribute("isEdit", id != null);
         return "users/form"; // HTMLは form.html に統一
     }
 
     // 登録・更新処理
     @PostMapping("/save")
-    public String save(@ModelAttribute @Validated User user, BindingResult result,
+    public String save(@ModelAttribute("userForm") @Validated UserForm userForm, BindingResult result,
                        RedirectAttributes redirectAttributes, Model model) {
         if (result.hasErrors()) {
-            return "users/form"; // バリデーションエラー時はフォームに戻る
+            return "users/form";
         }
+
+        User user = new User(userForm);
 
         if (user.getId() == null) {
             userService.insert(user);
             redirectAttributes.addFlashAttribute("message",
-                    "ユーザー『" + user.getName() + "』を登録しました。");
+                    "『" + user.getName() + "さん』の情報を登録しました。");
         } else {
             userService.update(user);
             redirectAttributes.addFlashAttribute("message",
-                    "ユーザー『" + user.getName() + "』を更新しました。");
+                    "ユーザー『" + user.getName() + "さん』の情報を更新しました。");
         }
 
         return "redirect:/users";

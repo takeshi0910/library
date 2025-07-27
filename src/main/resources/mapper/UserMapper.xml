@@ -8,14 +8,14 @@
         <result property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="password" column="password"/>
-        <result property="mail" column="mail"/>
+        <result property="email" column="email"/>
         <result property="role" column="role"/>
         <result property="deleted" column="deleted"/>
     </resultMap>
 
     <!-- 一覧取得（削除されてないユーザーのみ） -->
     <select id="findAll" resultMap="UserResultMap">
-        SELECT id, name, mail, role
+        SELECT id, name, email, role
         FROM users
         WHERE deleted = false
         ORDER BY id
@@ -23,22 +23,22 @@
 
     <!-- IDで取得 -->
     <select id="findById" resultMap="UserResultMap" parameterType="Long">
-        SELECT id, name, password, mail, role, deleted
+        SELECT id, name, password, email, role, deleted
         FROM users
         WHERE id = #{id}
     </select>
 
     <!-- メールアドレスで取得（ログインなどに使用） -->
-    <select id="findByMail" resultMap="UserResultMap" parameterType="String">
-        SELECT id, name, password, mail, role, deleted
+    <select id="findByemail" resultMap="UserResultMap" parameterType="String">
+        SELECT id, name, password, email, role, deleted
         FROM users
-        WHERE mail = #{mail} AND deleted = false
+        WHERE email = #{email} AND deleted = false
     </select>
 
     <!-- 登録処理 -->
     <insert id="insert" parameterType="User">
-        INSERT INTO users (name, password, mail, role, deleted)
-        VALUES (#{name}, #{password}, #{mail}, #{role}, FALSE)
+        INSERT INTO users (name, password, email, role, deleted)
+        VALUES (#{name}, #{password}, #{email}, #{role}, FALSE)
     </insert>
 
     <!-- 更新処理 -->
@@ -46,7 +46,7 @@
         UPDATE users
         SET name = #{name},
         password = #{password},
-        mail = #{mail},
+        email = #{email},
         role = #{role},
         deleted = #{deleted}
         WHERE id = #{id}

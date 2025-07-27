@@ -1,6 +1,5 @@
 package com.takeshi.library.controller.book;
 
-
 import com.takeshi.library.form.SearchBookForm;
 import com.takeshi.library.mapper.BookMapper;
 import com.takeshi.library.model.entity.Book;
@@ -31,6 +30,11 @@ public class BookController {
         this.genreService = genreService;
     }
 
+    @ModelAttribute("genres")
+    public List<Genre> populateGenres() {
+        return genreService.findAll();
+    }
+
     // 一覧表示
     @GetMapping
     public String list(Model model) {
@@ -46,10 +50,6 @@ public class BookController {
         Book book = (id != null) ? bookService.findById(id) : new Book();
         model.addAttribute("book", book);
         model.addAttribute("isEdit", id != null);
-
-        List<Genre> genres = genreService.findAllActive();
-        model.addAttribute("genres", genres);
-
         return "books/form"; // HTMLファイルは form.html に統一
     }
 
@@ -58,7 +58,6 @@ public class BookController {
     public String save(@ModelAttribute @Validated Book book, BindingResult result,
                        RedirectAttributes redirectAttributes, Model model) {
         if (result.hasErrors()) {
-            model.addAttribute("genres", genreService.findAllActive());
             return "books/form";
         }
 

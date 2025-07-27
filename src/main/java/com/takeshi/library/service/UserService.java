@@ -10,5 +10,5 @@ public interface UserService {
     void insert(User user);                       // 新規登録
     void update(User user);                       // 更新
     void softDelete(Long id);                     // 論理削除
-    User findByMail(String name);
+    User findByEmail(String name);
 }

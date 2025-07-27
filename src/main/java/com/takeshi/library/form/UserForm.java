@@ -1,6 +1,9 @@
 package com.takeshi.library.form;
 
+import com.takeshi.library.model.entity.enums.Role;
 import com.takeshi.library.validation.PasswordMatches;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.Data;
 import jakarta.validation.constraints.*;
 
@@ -18,7 +21,11 @@ public class UserForm {
     @NotBlank(message = "確認用パスワードは必須です")
     private String confirmPassword;
 
+    @NotBlank(message = "メールアドレスは必須です")
     @Email(message = "メールアドレスの形式が正しくありません")
-    private String mail;
+    private String email;
 
+    // private String role = "USER";   // 明示的に初期値を設定
+    @NotNull(message = "権限は必須です")
+    private Role role = Role.USER;   // 明示的に初期値を設定
 }

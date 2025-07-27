@@ -1,8 +1,7 @@
-package com.takeshi.library.service.impl;
+package com.takeshi.library.service;
 
 import com.takeshi.library.mapper.BookMapper;
 import com.takeshi.library.model.entity.Book;
-import com.takeshi.library.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

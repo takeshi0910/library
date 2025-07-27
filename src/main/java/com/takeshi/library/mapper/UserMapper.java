@@ -8,13 +8,13 @@ import java.util.List;
 @Mapper
 public interface UserMapper {
 
-    List<User> findAllActive(); // deleted = false の全件取得
+    List<User> findAll(); // deleted = false の全件取得
 
     List<User> findByKeyword(String keyword); // 名前などで部分一致検索
 
     User findById(Long id); // IDで取得
 
-    User findByMail(String mail);
+    User findByEmail(String email);
 
     void insert(User user); // 新規登録
 

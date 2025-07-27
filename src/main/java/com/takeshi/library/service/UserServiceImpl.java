@@ -1,9 +1,8 @@
-package com.takeshi.library.service.impl;
+package com.takeshi.library.service;
 
 import com.takeshi.library.mapper.UserMapper;
 import com.takeshi.library.model.entity.User;
-import com.takeshi.library.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,17 +10,18 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private final PasswordEncoder encoder;
     private final UserMapper userMapper;
 
-    @Autowired
-    public UserServiceImpl(UserMapper userMapper) {
+    public UserServiceImpl(PasswordEncoder encoder, UserMapper userMapper) {
+        this.encoder = encoder;
         this.userMapper = userMapper;
     }
 
     @Override
     public List<User> searchUsers(String keyword) {
         if (keyword == null || keyword.isBlank()) {
-            return userMapper.findAllActive(); // 削除されてない全件
+            return userMapper.findAll(); // 削除されてない全件
         }
         return userMapper.findByKeyword(keyword);
     }
@@ -32,17 +32,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByMail(String mail) {
-        return userMapper.findByMail(mail);
+    public User findByEmail(String email) {
+        return userMapper.findByEmail(email);
     }
 
     @Override
     public void insert(User user) {
+        String hashed = encoder.encode(user.getPassword()); // ← ここでハッシュ化
+        user.setPassword(hashed);
         userMapper.insert(user);
     }
 
     @Override
     public void update(User user) {
+        String hashed = encoder.encode(user.getPassword()); // ← ここでハッシュ化！
+        user.setPassword(hashed);
         userMapper.update(user);
     }
 
