@@ -9,7 +9,9 @@
 <body>
 <section layout:fragment="content">
     <h1>WELCOME</h1>
-    <p>ここから図書館アプリが始まります。</p>
+    <div th:if="${message}" class="alert alert-success">
+        <span th:text="${message}"></span>
+    </div>
 </section>
 </body>
 </html>

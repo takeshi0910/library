@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="ja"
       xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">図書館アプリ</title>
@@ -9,28 +10,119 @@
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.min.css}">
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script th:src="@{/webjars/vue/3.4.21/dist/vue.global.prod.js}"></script>
+    <script th:src="@{/webjars/axios/1.6.7/dist/axios.min.js}"></script>
+    <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{/js/common.js}"></script>
+
+    <style>
+        /* ユーザー情報のドロップダウンメニュー */
+        .dropdown-menu {
+          opacity: 0;
+          transform: translateY(-5px);
+          transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .dropdown-menu.show {
+          opacity: 1;
+          transform: translateY(0);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+
 </head>
-<body>
+<!-- javascriptでの権限情報参照用に、data-role属性を埋め込む -->
+<body th:attr="data-role=${#authentication.authorities.?[getAuthority() == 'ROLE_ADMIN'].size() > 0 ? 'ADMIN' : 'USER'}">
+
+<script>
+    const dropdown = document.getElementById('userDropdown');
+    if (dropdown) {
+      dropdown.addEventListener('show.bs.dropdown', function () {
+        const menu = document.querySelector('.dropdown-menu');
+        if (menu) menu.classList.add('show');
+      });
+
+      dropdown.addEventListener('hide.bs.dropdown', function () {
+        const menu = document.querySelector('.dropdown-menu');
+        if (menu) menu.classList.remove('show');
+      });
+    }
+</script>
 <div class="wrapper d-flex min-vh-100">
 
-    <header class="bg-ivory-deep border-bottom shadow-sm">
+    <header class="bg-ivory-deep border-bottom shadow-sm nowrap">
         <div class="container py-3">
             <div class="d-flex justify-content-between align-items-center">
                 <h1 class="h4 mb-0 app-title">
                     <i class="fas fa-book me-2"></i> Library App - 図書館アプリ
                 </h1>
-                <nav class="d-flex gap-3">
-                    <a th:href="@{/}" th:class="'nav-link ' + (${requestUri == '/' ? 'active' : ''})">
-                        <i class="fas fa-house-chimney"></i> HOME - ホーム
-                    </a>
-                    <a th:href="@{/books}" th:class="'nav-link ' + (${requestUri == '/books' ? 'active' : ''})">
-                        <i class="fas fa-book"></i> LIST - 一覧
-                    </a>
-                    <a th:href="@{/books/form}" th:class="'nav-link ' + (${requestUri == '/books/new' ? 'active' : ''})">
-                        <i class="fas fa-pen-to-square"></i> ADD - 登録
-                    </a>
-                </nav>
+
+                <!-- 👇 ここにログインユーザー名を表示 -->
+                <div class="d-flex align-items-center gap-3">
+                    <nav class="d-flex gap-3">
+                        <a th:href="@{/}" th:class="'nav-link ' + (${requestUri == '/' ? 'active' : ''})">
+                            <i class="fas fa-house-chimney"></i> HOME - ホーム
+                        </a>
+                        <a th:href="@{/books}" th:class="'nav-link ' + (${requestUri == '/books' ? 'active' : ''})">
+                            <i class="fas fa-book"></i> LIST - 一覧
+                        </a>
+                        <a sec:authorize="hasRole('ADMIN')"
+                           th:href="@{/books/form}"
+                           th:class="'nav-link ' + (${requestUri == '/books/form' ? 'active' : ''})">
+                            <i class="fas fa-pen-to-square"></i> ADD - 登録
+                        </a>
+                    </nav>
+
+                    <!-- 👤 ログイン済みユーザー -->
+                    <div th:if="${displayName != null}" class="dropdown ms-5">
+                        <a
+                                class="nav-link dropdown-toggle text-secondary"
+                                href="#"
+                                id="userDropdown"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                        >
+                            <i class="fas fa-user-circle me-1 text-primary"></i>
+                            <strong th:text="${displayName}">ユーザー名</strong> 様
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" th:href="@{/users/edit}">
+                                <i class="fas fa-user-gear me-2"></i> アカウント情報の編集
+                                <!-- get通信じゃ危険なきがする -->
+                            </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <!--/* ログアウトリンク。
+                            Spring Security の標準機能により /logout にアクセスするとセッション破棄される。
+                            */-->
+                            <li><a class="dropdown-item" th:href="@{/logout}">
+                                <i class="fas fa-right-from-bracket me-2"></i> ログアウト
+                            </a></li>
+                        </ul>
+                    </div>
+
+                    <!-- 👥 ゲスト表示（ログインリンク付きプルダウン） -->
+                    <div th:if="${displayName == null}" class="dropdown ms-5">
+                        <a
+                                class="nav-link dropdown-toggle text-muted"
+                                href="#"
+                                id="guestDropdown"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                        >
+                            <i class="fas fa-user-slash me-1"></i>
+                            ゲストとして閲覧中
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="guestDropdown">
+                            <li><a class="dropdown-item" th:href="@{/login}">
+                                <i class="fas fa-right-to-bracket me-2"></i> ログイン</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
@@ -46,6 +138,6 @@
     </div>
 
 </div>
->
+<div layout:fragment="scripts"></div>
 </body>
 </html>

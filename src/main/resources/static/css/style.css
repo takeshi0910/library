@@ -13,6 +13,21 @@
   background-color: #fcf6ea;
 }
 
+/* 折り返しNG */
+.nowrap {
+  white-space: nowrap;
+}
+
+/* パスワードの目玉アイコンのいれもの */
+.input-group-text {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  width: 40px;
+}
+
+
 body {
   background-color: #fefcf8;
   color: #8e694d;
@@ -53,7 +68,6 @@ header {
 }
 
 .nav-link:hover {
-  transform: translateY(-2px);
   opacity: 0.85;
 }
 
@@ -112,6 +126,7 @@ input:-webkit-autofill {
 
 .table th {
   background-color: #e5e0d0;
+  white-space: nowrap;
 }
 
 .table th,
@@ -165,4 +180,33 @@ input:-webkit-autofill {
 
 .book-card.fly-away {
   animation: flyAway 0.6s ease-out forwards;
+}
+
+/* aタグ　テキストリンク用 */
+.link-text {
+	display: flex;
+	align-items: center;
+	position: relative;
+	text-decoration: none;
+	transition: 0.3s;
+}
+
+.link-text::after {
+    position: absolute;
+    bottom: 0;
+    content: '';
+    width: 0;
+    height: 2px;
+    height: 1px;
+    background-color: #337ab7;
+    transition: width 0.5s;
+}
+
+.link-text:hover::after{
+    width: 100%;
+}
+
+/* bootStrapのアラート！アイコンの非表示 */
+input.is-invalid {
+  background-image: none !important;
 }

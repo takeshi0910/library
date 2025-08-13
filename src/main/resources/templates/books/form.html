@@ -4,19 +4,18 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
 <head>
-    <title>📘 本の新規登録</title><title th:text="${isEdit} ? '編集' : '新規登録'"></title>
+    <title th:text="${bookForm.id == null} ? '書籍情報　編集' : '書籍情報　新規登録'"></title>
 </head>
-    <h2 th:text="${isEdit} ? '📖 編集フォーム' : '📚 新規登録フォーム'"></h2>
 <body>
 <section layout:fragment="content">
     <div class="container">
 
-        <form  th:action="${isEdit} ? @{/books/update} : @{/books/create}" th:object="${book}" method="post" class="bg-white p-4 rounded shadow-sm"
+        <form th:action="@{/books/save}" th:object="${bookForm}" method="post" class="bg-white p-4 rounded shadow-sm"
               novalidate>
             <div th:if="${#fields.hasGlobalErrors()}">
                 <div class="alert alert-danger" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
             </div>
-            <input type="hidden" th:if="${isEdit}" th:field="*{id}" />
+            <input type="hidden" th:field="*{id}"/>
             <div class="mb-3">
                 <label class="form-label">書名 <span class="text-danger">*</span></label>
                 <input type="text" th:field="*{title}"
@@ -55,17 +54,15 @@
 
             <div class="mt-5 d-flex justify-content-between align-items-center">
                 <!-- 登録 / 更新ボタン -->
-                <button type="submit"
-                        class="btn btn-ivory btn-sm"
-                        th:formaction="@{${isEdit} ? '/books/update' : '/books/create'}">
-                    <i class="fas fa-pen-to-square"></i>
-                    <span th:text="${isEdit} ? 'UPDATE - 更新' : 'ADD - 登録'"></span>
+                <button type="submit" class="btn btn-ivory btn-sm">
+                    <i class="fas fa-check-circle"></i>
+                    <span>SAVE - 保存</span>
                 </button>
 
                 <!-- 削除ボタン（右端） -->
                 <button type="submit"
-                        th:if="${isEdit}"
-                        th:formaction="@{'/books/delete/' + ${book.id}}"
+                        th:if="${bookForm.id != null}"
+                        th:formaction="@{'/books/delete/' + ${bookForm.id}}"
                         onclick="return confirm('本当に削除しますか？');"
                         class="btn btn-danger btn-sm ms-auto">
                     <i class="fas fa-trash-alt"></i>

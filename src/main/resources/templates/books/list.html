@@ -44,39 +44,69 @@
     </div>
 
     <script>
-        window.onload = function() {
-          searchBooks(); // ページ読み込み時に自動実行！
-        };
+    window.onload = function() {
+        searchBooks(); // ページ読み込み時に自動実行！
+    };
 
-        function searchBooks() {
-          const keyword = document.getElementById('keyword').value;
+    function searchBooks() {
+        const keyword = document.getElementById('keyword').value;
+        const role = document.body.dataset.role; // 権限を取得
 
-          axios.get(`/api/books/search`, {
+        axios.get(`/api/books/search`, {
             params: { keyword: keyword }
-          })
-          .then(response => {
-            const data = response.data;
+        })
+            .then(response => {
+                renderBookRows(response.data);
+                attachRowClickHandlers(); // ← 描画後に呼び出す
+
+           /* const data = response.data;
             const result = document.getElementById('result');
 
             result.innerHTML = data.map(book => `
-              <tr class="fade-in" data-id="${book.id}" style="cursor: pointer;">
-                <td>${book.author}</td>
-                <td>${book.title}</td>
-                <td>${book.isbn}</td>
-                <td>${book.genreName}</td>
-              </tr>
+                <tr class="fade-in" data-id="${book.id}" style="cursor: pointer;">
+                    <td>${book.author}</td>
+                    <td>${book.title}</td>
+                    <td>${book.genreName}</td>
+                    <td>${book.isbn}</td>
+                </tr>
             `).join('');
 
-            document.querySelectorAll('#result tr[data-id]').forEach(row => {
-              row.addEventListener('click', () => {
-                window.location.href = `/books/form?id=${row.dataset.id}`;
+              document.querySelectorAll('#result tr[data-id]').forEach(row => {
+                row.addEventListener('click', () => {
+                  window.location.href = `/books/form?id=${row.dataset.id}`;
+                });
               });
-            });
+               */
+
           })
           .catch(error => {
             console.error('検索に失敗しました:', error);
           });
         }
+
+function renderBookRows(data) {
+  const result = document.getElementById('result');
+  result.innerHTML = data.map(book => `
+    <tr class="fade-in" data-id="${book.id}" style="cursor: pointer;">
+      <td>${book.author}</td>
+      <td>${book.title}</td>
+      <td>${book.genreName}</td>
+      <td>${book.isbn}</td>
+    </tr>
+  `).join('');
+}
+
+function attachRowClickHandlers() {
+  const role = document.body.dataset.role;
+  console.log("role:" + role);
+  if (role !== 'ADMIN') return;
+
+  document.querySelectorAll('#result tr[data-id]').forEach(row => {
+    row.addEventListener('click', () => {
+      window.location.href = `/books/form?id=${row.dataset.id}`;
+    });
+  });
+}
     </script>
 
 </section>
