@@ -3,14 +3,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.takeshi.library.mapper.BookMapper">
-    <resultMap id="BookResultMap" type="Book">
+    <resultMap id="BookResultMap" type="com.takeshi.library.entity.BookEntity">
         <result property="id" column="id"/>
         <result property="title" column="title"/>
         <result property="author" column="author"/>
         <result property="isbn" column="isbn"/>
-        <result property="deleted" column="deleted"/>
         <result property="genreId" column="genre_id"/>
         <result property="genreName" column="genre_name"/>
+        <result property="deleted" column="deleted"/>
     </resultMap>
 
     <select id="searchBooks" resultMap="BookResultMap" parameterType="String">
@@ -26,7 +26,7 @@
         ORDER BY b.id
     </select>
 
-    <select id="findById" resultMap="BookResultMap" parameterType="Long">
+    <select id="findById" resultMap="BookResultMap" parameterType="Integer">
         SELECT b.id, b.title, b.author, b.genre_id, b.isbn, b.deleted,
         g.id AS genre_id, g.name AS genre_name
         FROM book b
@@ -35,12 +35,12 @@
     </select>
 
     <!-- 登録処理 -->
-    <insert id="insert" parameterType="Book">
+    <insert id="insert" parameterType="com.takeshi.library.entity.BookEntity">
         INSERT INTO book (title, author, genre_id, isbn, deleted)
         VALUES (#{title}, #{author}, #{genreId}, #{isbn}, FALSE)
     </insert>
 
-    <update id="update" parameterType="com.takeshi.library.model.entity.Book">
+    <update id="update" parameterType="com.takeshi.library.entity.BookEntity">
         UPDATE book
         SET title = #{title},
         author = #{author},
@@ -54,6 +54,4 @@
     <update id="softDelete">
         UPDATE book SET deleted = true WHERE id = #{id}
     </update>
-
-
 </mapper>

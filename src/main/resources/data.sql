@@ -14,5 +14,5 @@ INSERT INTO book (title, author, genre_id, isbn, deleted) VALUES
   ('進撃の巨人', '諫山創', 6, '9784063842760', FALSE);
 
 INSERT INTO users (name, email, password, role, deleted) VALUES
-  ('Taro Yamada', 'taro@example.com', 'hashed_password_1', 'USER', FALSE),
-  ('Hanako Suzuki', 'hanako@example.com', 'hashed_password_2', 'ADMIN', FALSE);
+  ('Taro Yamada', 'taro@example.com', '$2a$10$yrAKx6i71L6Drl8TfSulyOykLOPnpRYc56ic87U7Z.GljxQxiQngG', 'USER', FALSE),
+  ('Hanako Suzuki', 'hanako@example.com', '$2a$10$yrAKx6i71L6Drl8TfSulyOykLOPnpRYc56ic87U7Z.GljxQxiQngG', 'ADMIN', FALSE);

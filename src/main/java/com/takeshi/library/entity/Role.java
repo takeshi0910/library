@@ -1,7 +1,7 @@
-package com.takeshi.library.model.entity.enums;
+package com.takeshi.library.entity;
 
 public enum Role {
-    USER("一般ユーザー"),
+    USER("一般"),
     ADMIN("管理者");
 
     private final String label;

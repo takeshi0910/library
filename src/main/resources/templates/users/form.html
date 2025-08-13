@@ -4,59 +4,87 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
 <head>
-    <title th:text="${id != null} ? 'ユーザー編集 ' : 'ユーザー新規登録 - Sign Up'">ユーザー新規登録 - Sign Up</title>
+    <title th:text="${userForm.id == null ? 'サインアップ' : 'アカウント情報編集'}"></title>
 </head>
 <body>
-<h2 th:text="${id != null} ? 'ユーザー編集 ' : 'ユーザー新規登録 - Sign Up'">ユーザー新規登録 - Sign Up</h2>
-
 <section layout:fragment="content">
     <div class="container">
-
-        <form th:action="@{/users/save}" th:object="${userForm}" method="post" class="bg-white p-4 rounded shadow-sm" novalidate>
+        <form th:action="@{/users/save}" th:object="${userForm}" method="post" class="bg-white p-4 rounded shadow-sm"
+              novalidate>
             <!-- グローバルエラー表示 -->
             <div th:if="${#fields.hasGlobalErrors()}">
                 <div class="alert alert-danger" th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
             </div>
 
-            <input type="hidden" th:if="${isEdit}" th:field="*{id}"/>
-
-            <div class="mb-3">
-                <label class="form-label">名前 <span class="text-danger">*</span></label>
-                <input type="text" th:field="*{name}" class="form-control"
-                       th:classappend="${#fields.hasErrors('name')}? 'is-invalid'">
-                <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+            <div>
+                <input type="hidden" th:field="*{id}"/>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">メールアドレス <span class="text-danger">*</span></label>
-                <input type="email" th:field="*{email}" class="form-control"
-                       th:classappend="${#fields.hasErrors('email')}? 'is-invalid'">
-                <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+            <div class="d-flex gap-2 align-items-start">
+                <label class="form-label text-end" style="width: 150px;">名前 <span
+                        class="text-danger">*</span></label>
+                <div class="d-flex flex-column">
+                    <input type="text" th:field="*{name}" class="form-control"
+                           th:classappend="${#fields.hasErrors('name')}? 'is-invalid'" style="width: 400px;">
+                    <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">パスワード <span class="text-danger">*</span></label>
-                <input type="text" th:field="*{password}" class="form-control"
-                       th:classappend="${#fields.hasErrors('password')}? 'is-invalid'">
-                <div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+            <div class="d-flex gap-2 align-items-start mt-3">
+                <label class="form-label text-end" style="width: 150px;">メールアドレス <span
+                        class="text-danger">*</span></label>
+                <div class="d-flex flex-column">
+                    <input type="email" th:field="*{email}" class="form-control"
+                           th:classappend="${#fields.hasErrors('email')}? 'is-invalid'" style="width: 400px;">
+                    <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">パスワード確認用 <span class="text-danger">*</span></label>
-                <input type="text" th:field="*{confirmPassword}" class="form-control"
-                       th:classappend="${#fields.hasErrors('confirmPassword')}? 'is-invalid'">
-                <div class="text-danger" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
+            <div class="d-flex gap-2 align-items-start mt-3">
+                <label class="form-label text-end" style="width: 150px;">パスワード <span
+                        class="text-danger">*</span></label>
+                <div class="d-flex flex-column">
+                    <div class="input-group" style="width:  400px;">
+                        <input type="password" id="password" th:field="*{password}" class="form-control"
+                               th:classappend="${#fields.hasErrors('password')}? 'is-invalid'"
+                               autocomplete="new-password">
+                        <span class="input-group-text" onclick="togglePassword()">
+                            <i id="togglePassword" class="fa fa-eye"></i>
+                        </span>
+                    </div>
+                    <div class="text-danger" th:if="${#fields.hasErrors('password')}"
+                         th:errors="*{password}"></div>
+                    <div th:if="${#fields.hasErrors('passwordValid')}" th:errors="*{passwordValid}" class="text-danger"></div>
+                    <small class="text-muted mt-1">※半角英数8文字以上で、大文字・小文字・数字を1文字以上含めてください。</small>
+                </div>
             </div>
 
-            <div class="mb-3" th:if="${isAdmin}">
-                <label class="form-label">権限</label>
-                <select th:field="*{role}" class="form-select">
+            <div class="d-flex gap-2 align-items-start mt-3">
+                <label class="form-label text-end" style="min-width: 150px;">パスワード確認用 <span
+                        class="text-danger">*</span></label>
+                <div class="d-flex flex-column">
+                    <div class="input-group" style="width:  400px;">
+                        <input type="password" id="confirmPassword" th:field="*{confirmPassword}" class="form-control"
+                               th:classappend="${#fields.hasErrors('confirmPassword')}? 'is-invalid'">
+                        <span class="input-group-text" onclick="togglePassword()">
+                            <i id="toggleConfirmPassword" class="fas fa-eye"></i>
+                        </span>
+                    </div>
+                    <div class="text-danger" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}">
+                    </div>
+                    <div th:if="${#fields.hasErrors('passwordConfirmed')}" th:errors="*{passwordConfirmed}" class="text-danger">
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="d-flex gap-2 align-items-start mt-3" th:if="${isAdmin}">
+                <label class="form-label text-end" style="min-width: 150px;">権限</label>
+                <select th:field="*{role}" class="form-select" style="width: 400px;">
                     <option th:each="r : ${roles}" th:value="${r}" th:text="${r.label}"></option>
                 </select>
             </div>
-            <input type="hidden" th:if="${!isAdmin}" th:field="*{role}" value="USER"/>
 
-            <!-- ボタン群 -->
             <div class="mt-5 d-flex justify-content-between align-items-center">
                 <button type="submit" class="btn btn-ivory btn-sm">
                     <i class="fas fa-check-circle"></i>
@@ -64,8 +92,8 @@
                 </button>
 
                 <button type="submit"
-                        th:if="${isEdit}"
-                        th:formaction="@{'/users/delete/' + ${user.id}}"
+                        th:if="${userForm.id != null}"
+                        th:formaction="@{'/users/delete/' + ${userForm.id}}"
                         onclick="return confirm('本当に削除しますか？');"
                         class="btn btn-danger btn-sm ms-auto">
                     <i class="fas fa-trash-alt"></i>

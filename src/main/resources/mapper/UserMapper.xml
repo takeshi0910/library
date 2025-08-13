@@ -3,8 +3,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.takeshi.library.mapper.UserMapper">
-
-    <resultMap id="UserResultMap" type="User">
+    <resultMap id="UserResultMap" type="com.takeshi.library.entity.UserEntity">
         <result property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="password" column="password"/>
@@ -22,38 +21,52 @@
     </select>
 
     <!-- IDで取得 -->
-    <select id="findById" resultMap="UserResultMap" parameterType="Long">
+    <select id="findById" resultMap="UserResultMap" parameterType="Integer">
         SELECT id, name, password, email, role, deleted
         FROM users
         WHERE id = #{id}
     </select>
 
     <!-- メールアドレスで取得（ログインなどに使用） -->
-    <select id="findByemail" resultMap="UserResultMap" parameterType="String">
+    <select id="findByEmail" resultMap="UserResultMap" parameterType="String">
         SELECT id, name, password, email, role, deleted
         FROM users
         WHERE email = #{email} AND deleted = false
     </select>
 
+    <!-- メールアドレスの重複チェック（自分自身は除く) -->
+    <select id="existsByEmail" resultType="boolean">
+        SELECT COUNT(*) > 0
+        FROM users
+        WHERE email = #{email}
+        <if test="id != null">
+            AND id != #{id}
+        </if>
+    </select>
+
     <!-- 登録処理 -->
-    <insert id="insert" parameterType="User">
+    <insert id="insert" parameterType="com.takeshi.library.entity.UserEntity">
         INSERT INTO users (name, password, email, role, deleted)
         VALUES (#{name}, #{password}, #{email}, #{role}, FALSE)
     </insert>
 
     <!-- 更新処理 -->
-    <update id="update" parameterType="User">
+    <update id="update" parameterType="com.takeshi.library.entity.UserEntity">
         UPDATE users
-        SET name = #{name},
-        password = #{password},
-        email = #{email},
-        role = #{role},
-        deleted = #{deleted}
-        WHERE id = #{id}
+        <set>
+            name = #{name},
+            <if test="password != null">
+                password = #{password},
+            </if>
+            email = #{email},
+            role = #{role},
+            deleted = #{deleted}
+            WHERE id = #{id}
+        </set>
     </update>
 
     <!-- 論理削除 -->
-    <update id="softDelete" parameterType="Long">
+    <update id="softDelete" parameterType="Integer">
         UPDATE users SET deleted = true WHERE id = #{id}
     </update>
 

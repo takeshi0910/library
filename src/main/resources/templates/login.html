@@ -6,27 +6,93 @@
 <head>
     <title>ログイン</title>
     <style>
-        [v-cloak] {
-          display: none;
+
+        #app {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
+
+        .line-with-text {
+          display: grid;
+          grid-template-columns: 1fr auto 1fr;
+          align-items: center;
+          width: 100%;
+          gap: 1rem;
+          margin: 2rem 0;
+          color: #666;
+        }
+
+        .line-with-text::before,
+        .line-with-text::after {
+          content: "";
+          height: 1px;
+          background-color: #ccc;
+          display: block;
+        }
+
+
     </style>
 </head>
 <body>
 <section layout:fragment="content" th:inline="none">
     <div id="app">
-        <h2>🔐 ログイン</h2>
-        <form @submit.prevent="handleLogin">
-            <label>メールアドレス</label><br/>
-            <input v-model="email" type="email" required/><br/>
+        <form id="loginForm">
+            <h2>ログイン</h2>
 
-            <label>パスワード</label><br/>
-            <input v-model="password" type="password" required/><br/>
+            <div th:if="${displayName != null}" class="alert alert-info">
+                ようこそ、<span th:text="${displayName}">ユーザー</span> 様
+                <br>すでにログイン済みです。
+            </div>
 
-            <button type="submit" class="mt-3">ログイン</button>
-            <p v-if="errorMessage" v-cloak class="error">{{ errorMessage }}</p>
+            <div class="d-flex align-items-center gap-2 mt-4">
+                <label style="width: 150px; text-align:right;">
+                    <i class="fas fa-envelope"></i> メールアドレス
+                </label>
+                <input type="email" id="email" class="form-control" required style="width: 300px;"/>
+            </div>
+
+            <div class="d-flex align-items-center gap-2 mt-2 password-wrapper">
+                <label class="mb-0" style="width: 150px; text-align:right;">
+                    <i class="fas fa-lock"></i> パスワード
+                </label>
+                <div class="input-group" style="width: 300px;">
+                    <input type="password" id="password" class="form-control" required/>
+                    <span class="input-group-text" onclick="togglePassword()">
+                        <i id="togglePassword" class="fa fa-eye"></i>
+                    </span>
+                </div>
+            </div>
+
+            <div>
+                <span id="errorMessage" class="error text-danger" style="display: none;"></span>
+                <button type="submit" class="mt-3 btn btn-ivory btn-sm" style="width: 200px;">
+                    <i class="fas fa-sign-in-alt me-1"></i> Login - ログイン
+                </button>
+            </div>
         </form>
-    </div>
+
+        <div class="mt-5">
+            <a class="link-text" th:href="@{/}">ゲストユーザーで利用する</a>
+        </div>
+
+        <div class="line-with-text mb-3">
+            <span>新しくアカウントを作る場合はこちら</span>
+        </div>
+        <a th:href="@{/users/signup}" class="btn btn-ivory btn-sm" style="width: 200px;">
+            <i class="fas fa-star me-1"></i> SignUp - サインアップ
+        </a>
+
+    </div><!-- app -->
+
 </section>
-<script th:src="@{/js/login.js}"></script>
+
+<div layout:fragment="scripts">
+    <script th:src="@{/js/login.js}" defer></script>
+</div>
+
 </body>
 </html>

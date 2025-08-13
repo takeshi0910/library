@@ -1,19 +1,19 @@
 package com.takeshi.library.mapper;
 
-import com.takeshi.library.model.entity.Book;
+import com.takeshi.library.entity.BookEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
 @Mapper
 public interface BookMapper {
-    List<Book> searchBooks(String keyword);
+    List<BookEntity> searchBooks(String keyword);
 
-    void insert(Book book);
+    void insert(BookEntity book);
 
-    void update(Book book);
+    void update(BookEntity book);
 
-    Book findById(Long id); // これを追加！
+    BookEntity findById(Integer id);
 
-    void softDelete(Long id);
+    void softDelete(Integer id);
 }

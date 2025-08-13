@@ -1,4 +1,4 @@
-package com.takeshi.library.controller.login;
+package com.takeshi.library.controller.view;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,5 +10,5 @@ public class LoginController {
     public String showLoginPage() {
         return "login";
     }
-}
 
+}

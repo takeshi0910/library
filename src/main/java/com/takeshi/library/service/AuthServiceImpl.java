@@ -1,30 +1,31 @@
 package com.takeshi.library.service;
 
+import com.takeshi.library.entity.UserEntity;
+import com.takeshi.library.domain.auth.AuthResult;
 import com.takeshi.library.mapper.UserMapper;
-import com.takeshi.library.model.entity.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     private final UserMapper userMapper;
 
-    public AuthServiceImpl(UserMapper userMapper) {
-        this.userMapper = userMapper;
-    }
-
     @Override
-    public boolean authenticate(String email, String password) {
-        User user = userMapper.findByEmail(email);
-        if (user == null) {
-            return false;
+    public AuthResult authenticate(String email, String password) {
+        UserEntity userEntity = userMapper.findByEmail(email);
+        if (userEntity == null) {
+            return AuthResult.EMAIL_NOT_FOUND;
         }
-        return checkPassword(password, user.getPassword());
+        if(!checkPassword(password, userEntity.getPassword())){
+            return AuthResult.INVALID_PASSWORD;
+        }
+        return AuthResult.SUCCESS;
     }
 
     private boolean checkPassword(String rawPassword, String hashedPassword) {
-        // BCryptで照合
         return new BCryptPasswordEncoder().matches(rawPassword, hashedPassword);
     }
 

@@ -1,7 +1,7 @@
 # 図書館アプリ（学習用）
 
->このプロジェクトは、Vue.js + Spring Boot + MyBatis を使った図書館管理システムの学習用教材です。 
-> Vue.jsとSpring Bootの連携、認証、CRUD操作などを一通り体験できます。
+>このプロジェクトは、Spring Boot + Thymeleaf + MyBatis を使った図書館管理システムの学習用教材です。 
+>認証、CRUD操作などを一通り体験できます。
 
 ## 🔧 搭載している機能
 - ✅ ログイン機能（Spring Security）
@@ -12,15 +12,26 @@
 
 ## 🚀 使用技術
 
-| 分類         | 技術スタック                                      |
-|--------------|--------------------------------------------------|
-| Frontend     | Vue.js / axios / Bootstrap / Font Awesome        |
-| Backend      | Spring Boot / MyBatis                            |
-| Database     | H2（インメモリ）                                 |
+| 分類         | 技術スタック                                     |
+|--------------|-------------------------------------------------|
+| Frontend     | axios / Bootstrap / Font Awesome        |
+| Backend      | Spring Boot / MyBatis                           |
+| Database     | H2（インメモリ）                                |
 | Build Tool   | Gradle（依存管理・ビルド・起動を一括管理）       |
-| Template     | Thymeleaf / Layout Dialect                       |
-| Security     | Spring Security / BCrypt                         |
+| Template     | Thymeleaf / Layout Dialect                      |
+| Security     | Spring Security / BCrypt                        |
 
+
+## 💻 動作環境
+
+このアプリケーションは以下の環境で動作確認されています：
+
+- Java 21（必須）
+- Spring Boot 3.5.3
+- Spring Security 6.x
+- Thymeleaf Extras Spring Security 6（3.1.0.M1）
+
+> 💡 Java 17以下では起動できません。必ず Java 21 以上をご利用ください。
 
 ## 🛠️ セットアップ手順
 
@@ -45,7 +56,7 @@ cd library-app
 - DemoApplication.java を右クリック → 「Run」すればOK！
 > このプロジェクトは、Gradleによって依存管理・ビルド・起動が一貫して行われています。  
 > npmやMavenなどの追加セットアップは不要で、Spring Boot単体で完結する構成です。  
-> フロントエンドのライブラリ（Vue.js / axiosなど）も WebJars を通じて統合されています。
+> フロントエンドのライブラリ axiosなど も WebJars を通じて統合されています。
 
 ## 🌐 アクセスURL
 アプリ起動後、以下のURLにアクセスしてください： 

@@ -1,4 +1,4 @@
-package com.takeshi.library.controller;
+package com.takeshi.library.controller.view;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +8,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        return "index";  // src/main/resources/templates/index.html を返す
+        return "home";  // src/main/resources/templates/home.html を返す
     }
 }

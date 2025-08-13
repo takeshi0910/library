@@ -1,13 +1,13 @@
-package com.takeshi.library.model.entity;
+package com.takeshi.library.form;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import jakarta.validation.constraints.NotBlank;
 
 @Data
-public class Book {
+public class BookForm {
 
-    private Long id;
+    private Integer id;
 
     @NotBlank(message = "書名は必須項目です")
     private String title;

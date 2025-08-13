@@ -1,10 +1,9 @@
 package com.takeshi.library.service;
 
-import com.takeshi.library.model.entity.Book;
-import com.takeshi.library.model.entity.Genre;
+import com.takeshi.library.entity.GenreEntity;
 
 import java.util.List;
 
 public interface GenreService {
-    List<Genre> findAll();
+    List<GenreEntity> findAll();
 }
