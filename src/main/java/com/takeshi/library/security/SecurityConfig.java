@@ -1,5 +1,6 @@
 package com.takeshi.library.security;
 
+import com.takeshi.library.security.entrypoint.CustomAuthenticationEntryPoint;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final LoginUserDetailsService loginUserDetailsService;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -28,7 +30,10 @@ public class SecurityConfig {
                         .requestMatchers("/books/form", "/books/save",  "/books/delete/**").hasRole("ADMIN")
                         .anyRequest().permitAll()// 他のAPIは認証必須
                 )
-                .userDetailsService(loginUserDetailsService) // ← これが必要！
+                .userDetailsService(loginUserDetailsService)
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                )
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )

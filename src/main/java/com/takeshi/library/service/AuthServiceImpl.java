@@ -17,11 +17,14 @@ public class AuthServiceImpl implements AuthService {
     public AuthResult authenticate(String email, String password) {
         UserEntity userEntity = userMapper.findByEmail(email);
         if (userEntity == null) {
+            System.out.println("userEntity == null");
             return AuthResult.EMAIL_NOT_FOUND;
         }
         if(!checkPassword(password, userEntity.getPassword())){
+            System.out.println("!checkPassword(password, userEntity.getPassword())");
             return AuthResult.INVALID_PASSWORD;
         }
+
         return AuthResult.SUCCESS;
     }
 

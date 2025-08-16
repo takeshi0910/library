@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ja"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>システムエラー</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <h1>500 - システムエラーが発生しました</h1>
+    <p th:text="${message}">予期せぬエラーが発生しました。</p>
+    <a href="/">トップページへ戻る</a>
+</section>
+</body>
+</html>
