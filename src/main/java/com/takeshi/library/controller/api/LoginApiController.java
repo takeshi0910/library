@@ -34,6 +34,7 @@ public class LoginApiController {
         try {
             AuthResult result = authService.authenticate(request.getEmail(), request.getPassword());
             if (result != AuthResult.SUCCESS) {
+                System.out.println("result != AuthResult.SUCCESS");
                 return failedResponse(result); // 401 + メッセージ
             }
         } catch (DataAccessException e) {
@@ -62,6 +63,7 @@ public class LoginApiController {
      * @return 認証失敗レスポンス（success: false, message: ...）
      */
     private ResponseEntity<Map<String, Object>> failedResponse(AuthResult result) {
+        System.out.println("result.getMessage():" + result.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("success", false, "message", result.getMessage()));
     }

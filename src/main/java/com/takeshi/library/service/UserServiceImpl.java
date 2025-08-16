@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity findById(Long id) {
+    public UserEntity findById(Integer id) {
         return userMapper.findById(id);
     }
 
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void softDelete(Long id) {
+    public void softDelete(Integer id) {
         userMapper.softDelete(id); // 論理削除（deleted = true）
     }
 

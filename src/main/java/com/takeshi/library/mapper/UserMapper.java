@@ -13,7 +13,7 @@ public interface UserMapper {
 
     List<UserEntity> findByKeyword(String keyword); // 名前などで部分一致検索
 
-    UserEntity findById(Long id); // IDで取得
+    UserEntity findById(Integer id); // IDで取得
 
     UserEntity findByEmail(String email);
 
@@ -21,7 +21,7 @@ public interface UserMapper {
 
     void update(UserEntity userEntity); // 更新
 
-    void softDelete(Long id); // 論理削除（deleted = true に更新）
+    void softDelete(Integer id); // 論理削除（deleted = true に更新）
 
     boolean existsByEmail(@Param("email") String email, @Param("id") Integer id);
 

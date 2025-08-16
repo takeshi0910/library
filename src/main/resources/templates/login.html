@@ -34,7 +34,6 @@
           display: block;
         }
 
-
     </style>
 </head>
 <body>
@@ -46,6 +45,10 @@
             <div th:if="${displayName != null}" class="alert alert-info">
                 ようこそ、<span th:text="${displayName}">ユーザー</span> 様
                 <br>すでにログイン済みです。
+            </div>
+
+            <div th:if="${infoMessage}" class="alert alert-info" role="alert">
+                <span th:text="${infoMessage}"></span>
             </div>
 
             <div class="d-flex align-items-center gap-2 mt-4">

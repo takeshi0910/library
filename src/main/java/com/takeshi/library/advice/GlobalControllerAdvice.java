@@ -1,5 +1,6 @@
 package com.takeshi.library.advice;
 
+import com.takeshi.library.entity.Role;
 import com.takeshi.library.entity.UserEntity;
 import com.takeshi.library.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,6 +23,7 @@ public class GlobalControllerAdvice {
 
     @ModelAttribute("displayName") // ← 氏名を表す変数名に変更
     public String addDisplayNameToModel(Principal principal) {
+
         if (principal == null) return null;
 
         String email = principal.getName(); // ← Principalからemailを取得
@@ -32,8 +34,13 @@ public class GlobalControllerAdvice {
 
     @ModelAttribute("isAdmin")
     public boolean populateIsAdmin(Principal principal) {
-        if (principal == null) return false;
+
+        if (principal == null) {
+            System.out.println("principal:null");
+            return false;
+        }
+        System.out.println("principal.getName():" + principal.getName());
         UserEntity currentUserEntity = userService.findByEmail(principal.getName());
-        return "ADMIN".equals(currentUserEntity.getRole());
+        return currentUserEntity.getRole() == Role.ADMIN; //Enum型の比較はequalsではないので注意！
     }
 }

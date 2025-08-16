@@ -24,7 +24,7 @@
     <select id="findById" resultMap="UserResultMap" parameterType="Integer">
         SELECT id, name, password, email, role, deleted
         FROM users
-        WHERE id = #{id}
+        WHERE id = #{id} AND deleted = false
     </select>
 
     <!-- メールアドレスで取得（ログインなどに使用） -->
@@ -38,7 +38,7 @@
     <select id="existsByEmail" resultType="boolean">
         SELECT COUNT(*) > 0
         FROM users
-        WHERE email = #{email}
+        WHERE email = #{email} AND deleted = false
         <if test="id != null">
             AND id != #{id}
         </if>

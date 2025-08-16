@@ -7,23 +7,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let isVisible = false;
 
-    // ログイン処理
     form.addEventListener('submit', async function (e) {
-        e.preventDefault(); // @submit.prevent の代わり
+        e.preventDefault();
 
         const email = emailInput.value;
         const password = passwordInput.value;
 
         try {
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email, password })
+            const response = await axios.post('/api/login', {
+                email,
+                password
             });
 
-            const data = await response.json();
+            const data = response.data;
 
             if (data.success) {
                 window.location.href = '/';
@@ -33,7 +29,11 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         } catch (error) {
             console.error('通信エラー:', error);
-            errorMessage.textContent = 'ログイン中にエラーが発生しました';
+            if (error.response?.status === 401) {
+                errorMessage.textContent = error.response.data.message || '認証に失敗しました';
+            } else {
+                errorMessage.textContent = 'ログイン中にエラーが発生しました';
+            }
             errorMessage.style.display = 'block';
         }
     });

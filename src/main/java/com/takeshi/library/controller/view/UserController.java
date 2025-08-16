@@ -10,6 +10,7 @@ import com.takeshi.library.validation.group.GroupOrder;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -86,12 +88,33 @@ public class UserController {
 
     // 削除処理
     @PostMapping("/delete/{id}")
-    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    public String delete(@PathVariable Integer id, Principal principal,
+                         HttpServletRequest request,
+                         RedirectAttributes redirectAttributes) {
+
+        // 認証チェック
+        if (principal == null) {
+            redirectAttributes.addFlashAttribute("error", "ログインしてください");
+            return "redirect:/login";
+        }
+
         // 削除前に名前を取得してメッセージ用に使う（任意）
         UserEntity userEntity = userService.findById(id);
         String name = (userEntity != null) ? userEntity.getName() : "未確認のユーザー";
 
         userService.softDelete(id); // 実際の削除処理（論理削除など）
+
+        // 自分自身の削除かどうかを判定
+        String currentUsername = principal.getName(); // 通常は email や username
+        boolean isSelfDelete = userEntity != null && currentUsername.equals(userEntity.getEmail());
+
+        if (isSelfDelete) {
+            // 認証情報とセッションをクリア
+            SecurityContextHolder.clearContext();
+            request.getSession().invalidate();
+            return "redirect:/login?accountDeleted";
+        }
+
         redirectAttributes.addFlashAttribute("message", "ユーザー『" + name + "』を削除しました。");
 
         return "redirect:/users"; // 一覧に戻る
