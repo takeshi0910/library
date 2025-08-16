@@ -14,20 +14,23 @@
     </resultMap>
 
     <select id="searchBooks" resultMap="BookResultMap" parameterType="String">
-        SELECT b.id, b.title, b.author, b.genre_id, b.isbn, b.deleted,
+        SELECT b.id, b.title, b.author, b.isbn, b.deleted,
         g.id AS genre_id, g.name AS genre_name
         FROM book b
         JOIN genres g ON b.genre_id = g.id
         WHERE b.deleted = false
-        <if test="keyword != null and keyword.trim() != ''">
-            AND (b.title LIKE CONCAT('%', #{keyword}, '%')
-            OR b.author LIKE CONCAT('%', #{keyword}, '%'))
+        <if test="keyword != null and keyword != ''">
+            AND (
+            b.title LIKE CONCAT('%', #{keyword}, '%')
+            OR b.author LIKE CONCAT('%', #{keyword}, '%')
+            )
         </if>
+
         ORDER BY b.id
     </select>
 
     <select id="findById" resultMap="BookResultMap" parameterType="Integer">
-        SELECT b.id, b.title, b.author, b.genre_id, b.isbn, b.deleted,
+        SELECT b.id, b.title, b.author, b.isbn, b.deleted,
         g.id AS genre_id, g.name AS genre_name
         FROM book b
         JOIN genres g ON b.genre_id = g.id
@@ -51,7 +54,7 @@
     </update>
 
     <!-- 論理削除処理 -->
-    <update id="softDelete">
+    <update id="softDelete" parameterType="Integer">
         UPDATE book SET deleted = true WHERE id = #{id}
     </update>
 </mapper>
