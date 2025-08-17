@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: springboot-app
+    env: java
+    buildCommand: ./gradlew build
+    startCommand: java $JAVA_OPTS -jar build/libs/library-0.0.1-SNAPSHOT.jar
+    envVars:
+      - key: JAVA_OPTS
+        value: "-Xmx256m -Xms128m"
+    healthCheckPath: null
