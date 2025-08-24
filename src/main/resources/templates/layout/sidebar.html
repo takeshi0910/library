@@ -1,0 +1,19 @@
+<aside class="bg-light border-end p-3" th:fragment="sidebar"
+       xmlns:th="http://www.thymeleaf.org"
+       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <nav class="nav flex-column">
+        <h6 class="text-muted mb-2">操作メニュー</h6>
+
+        <a class="nav-link" th:href="@{/lend}" sec:authorize="isAuthenticated()">
+            <i class="fas fa-hand-holding me-2"></i> 借りる
+        </a>
+
+        <a class="nav-link" th:href="@{/return}" sec:authorize="isAuthenticated()">
+            <i class="fas fa-rotate-left me-2"></i> 返す
+        </a>
+
+        <a class="nav-link" th:href="@{/history}" sec:authorize="isAuthenticated()">
+            <i class="fas fa-clock-rotate-left me-2"></i> 履歴一覧
+        </a>
+    </nav>
+</aside>

@@ -1,12 +1,12 @@
 package com.takeshi.library.service;
 
+import com.github.pagehelper.PageInfo;
+import com.takeshi.library.dto.PageRequestDto;
 import com.takeshi.library.entity.BookEntity;
 import com.takeshi.library.form.BookForm;
 
-import java.util.List;
-
 public interface BookService {
-    List<BookEntity> searchBooks(String keyword);
+    PageInfo<BookEntity> searchBooks(String keyword, PageRequestDto pageRequestDto);
     void insert(BookForm book);
     BookEntity findById(Integer id);
     void update(BookForm book);

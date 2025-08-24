@@ -1,6 +1,9 @@
 package com.takeshi.library.service;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.takeshi.library.application.book.BookConverter;
+import com.takeshi.library.dto.PageRequestDto;
 import com.takeshi.library.entity.BookEntity;
 import com.takeshi.library.mapper.BookMapper;
 import com.takeshi.library.form.BookForm;
@@ -17,11 +20,20 @@ public class BookServiceImpl implements BookService {
     private final BookConverter bookConverter;
 
     @Override
-    public List<BookEntity> searchBooks(String keyword) {
-        if (keyword == null || keyword.trim().isEmpty()) {
-            return bookMapper.searchBooks(""); // 全件表示（XMLの中で条件分岐）
-        }
-        return bookMapper.searchBooks(keyword);
+    public PageInfo<BookEntity> searchBooks(String keyword, PageRequestDto pageRequestDto) {
+
+        // PageHelperでページング開始（ページ番号は1から始まる）
+        PageHelper.startPage(pageRequestDto.getPageNum(), pageRequestDto.getPageSize());
+
+        // キーワードが空なら全件検索
+        String searchKeyword = (keyword == null || keyword.trim().isEmpty()) ? "" : keyword;
+
+        // Mapperから検索結果を取得し、PageInfoにラップ
+        String sortBy = pageRequestDto.getSortBy();
+        Boolean isDescending = pageRequestDto.isDescending();
+        List<BookEntity> books = bookMapper.searchBooks(searchKeyword, sortBy, isDescending);
+        return new PageInfo<>(books);
+
     }
 
     @Override

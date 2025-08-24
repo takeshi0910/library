@@ -7,7 +7,7 @@ import java.util.List;
 
 @Mapper
 public interface BookMapper {
-    List<BookEntity> searchBooks(String keyword);
+    List<BookEntity> searchBooks(String keyword, String sortBy, boolean isDescending);
 
     void insert(BookEntity book);
 

@@ -1,6 +1,7 @@
 package com.takeshi.library.controller.view;
 
 import com.takeshi.library.application.book.BookConverter;
+import com.takeshi.library.dto.PageRequestDto;
 import com.takeshi.library.entity.BookEntity;
 import com.takeshi.library.form.BookForm;
 import com.takeshi.library.entity.GenreEntity;
@@ -33,9 +34,7 @@ public class BookController {
     // 一覧表示
     @GetMapping
     public String list(Model model) {
-        List<BookEntity> books = bookService.searchBooks(""); // 空文字で検索 → 全件表示
         model.addAttribute("searchBookForm", new SearchBookForm());
-        model.addAttribute("books", books);
         return "books/list";
     }
 

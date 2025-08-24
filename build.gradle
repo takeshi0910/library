@@ -33,6 +33,7 @@ dependencies {
 	implementation 'org.webjars:webjars-locator:0.45'
 	implementation 'org.webjars.npm:axios:1.6.7'
 	implementation 'org.webjars.npm:vue:3.4.21'
+	implementation 'com.github.pagehelper:pagehelper-spring-boot-starter:1.4.6'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.0.M1'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

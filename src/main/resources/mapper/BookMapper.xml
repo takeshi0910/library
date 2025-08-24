@@ -25,8 +25,21 @@
             OR b.author LIKE CONCAT('%', #{keyword}, '%')
             )
         </if>
+        <choose>
+            <when test="sortBy != null">
+                ORDER BY
+                <choose>
+                    <when test="sortBy == 'title'">title</when>
+                    <when test="sortBy == 'author'">author</when>
+                    <when test="sortBy == 'genreName'">genre_name</when>
+                    <when test="sortBy == 'isbn'">isbn</when>
+                    <otherwise>id</otherwise>
+                </choose>
+                <if test="isDescending"> DESC </if>
+                <if test="!isDescending"> ASC </if>
+            </when>
+        </choose>
 
-        ORDER BY b.id
     </select>
 
     <select id="findById" resultMap="BookResultMap" parameterType="Integer">
